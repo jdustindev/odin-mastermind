@@ -26,3 +26,14 @@ press enter
 If correct, win! Otherwise, computer gives feedback with key pegs.
 
 Game loop ends.
+
+
+## Coding
+### Game object
+
+instance variables:
+- allowed_guesses (int) (will loop this many times?)
+- num_guesses: default is 0. How many guesses have been made so far?
+- const code_colors: ['R', 'O', 'Y', 'G', 'B', 'P']
+- const key_colors: ['B', 'W']
+- game_board: [{code, keys}, {code, keys}, ...] - code is an array of 4 pegs, keys is an array of 4 pegs

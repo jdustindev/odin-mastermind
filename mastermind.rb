@@ -11,6 +11,7 @@ class MastermindGame
     def play()
         while @num_guesses < @allowed_guesses
             play_round
+            @num_guesses += 1
         end
     end
 

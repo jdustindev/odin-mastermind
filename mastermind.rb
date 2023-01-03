@@ -39,12 +39,7 @@ class MastermindGame
                 @game_board.push(turn)
             end
         elsif (@player == 'C')
-            code_guess = []
-            4.times do
-                code_guess << CODE_COLORS[rand(6)]
-            end
-            keys = give_feedback(code_guess)
-            turn = {guess: code_guess, key_pegs: keys}
+            turn = computer_guess
             @game_board.push(turn)
         end
         display_board
@@ -110,6 +105,19 @@ class MastermindGame
 
     def win?
         @game_board[-1][:key_pegs] == ['B', 'B', 'B', 'B']
+    end
+
+    def computer_guess
+        code_guess = []
+        if (@game_board.empty?)
+            code_guess = ['R', 'R', 'R', 'R']
+        else
+            4.times do
+                code_guess << CODE_COLORS[rand(6)]
+            end
+        end
+        keys = give_feedback(code_guess)
+        {guess: code_guess, key_pegs: keys}
     end
 end
 

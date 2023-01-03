@@ -2,7 +2,8 @@ class MastermindGame
     CODE_COLORS = ['R', 'O', 'Y', 'G', 'B', 'P']
     KEY_COLORS = ['B', 'W']
 
-    def initialize()
+    def initialize(player)  # player should be 'h' for human or 'c' for computer
+        @player = player
         @allowed_guesses = 10
         @num_guesses = 0
         @game_board = []
@@ -11,6 +12,10 @@ class MastermindGame
     end
 
     def play()
+        if (@player.upcase != 'H' && @player.upcase != 'C')
+            puts "Invalid player choice. Choose H or C."
+            exit
+        end
         while @num_guesses < @allowed_guesses
             play_round
             if win?
@@ -88,5 +93,6 @@ class MastermindGame
     end
 end
 
-game = MastermindGame.new
+puts "Enter 'h'(uman) to guess or 'c'(omputer) to create a code and have the computer guess:"
+game = MastermindGame.new(gets.chomp)
 game.play

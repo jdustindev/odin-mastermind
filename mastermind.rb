@@ -23,8 +23,11 @@ class MastermindGame
         guess = gets.chop.upcase.chars
         guess_valid = check_guess(guess)
         if guess_valid
-            give_feedback(guess)
+            keys = give_feedback(guess)
+            puts "#{{guess: guess, key_pegs: keys}}"
+            @game_board.push({guess: guess, key_pegs: keys})
         end
+        puts @gameboard
     end
 
     def generate_code()
@@ -46,20 +49,19 @@ class MastermindGame
     end
 
     def give_feedback(guess)
-        key_pegs = [nil, nil, nil, nil]
-        code_colors = count_colors(@code)
         puts @code
-        puts code_colors
+        key_pegs = []
+        code_colors = count_colors(@code)
         # Only add a B or W peg if the instances of a code color are not used up
         # (This prevents adding a white peg when there is already a peg for a color)
         # (That is, without this extra logic, it would add a white peg for every guess of a color even if it is only matched once)
         guess.each_with_index do |item, index|
             if (@code.include?(item) && code_colors[item] > 0)
-                item == @code[index] ? key_pegs[index] = "B" : key_pegs[index] = "W"
+                item == @code[index] ? key_pegs << "B" : key_pegs << "W"
                 code_colors[item] -= 1
             end
-            puts key_pegs
         end
+        key_pegs.sort
     end
 
     def count_colors(colors)

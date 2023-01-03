@@ -110,7 +110,7 @@ class MastermindGame
     def computer_guess
         code_guess = []
         if (@game_board.empty?)
-            code_guess = ['R', 'R', 'R', 'R']
+            code_guess = ['R', 'R', 'G', 'G']
         else
             4.times do
                 code_guess << CODE_COLORS[rand(6)]

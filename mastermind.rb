@@ -3,7 +3,7 @@ class MastermindGame
     KEY_COLORS = ['B', 'W']
 
     def initialize(player)  # player should be 'h' for human or 'c' for computer
-        @player = player
+        @player = player.upcase
         @allowed_guesses = 10
         @num_guesses = 0
         @game_board = []
@@ -12,7 +12,7 @@ class MastermindGame
     end
 
     def play()
-        if (@player.upcase != 'H' && @player.upcase != 'C')
+        if (@player != 'H' && @player != 'C')
             puts "Invalid player choice. Choose H or C."
             exit
         end
@@ -30,19 +30,39 @@ class MastermindGame
     def play_round()
         guess_valid = false
         puts "\nEnter code: "
-        guess = gets.chop.upcase.chars
-        guess_valid = check_guess(guess)
-        if guess_valid
-            keys = give_feedback(guess)
-            turn = {guess: guess, key_pegs: keys}
+        if (@player == 'H')
+            guess = gets.chop.upcase.chars
+            guess_valid = check_guess(guess)
+            if guess_valid
+                keys = give_feedback(guess)
+                turn = {guess: guess, key_pegs: keys}
+                @game_board.push(turn)
+            end
+        elsif (@player == 'C')
+            code_guess = []
+            4.times do
+                code_guess << CODE_COLORS[rand(6)]
+            end
+            keys = give_feedback(code_guess)
+            turn = {guess: code_guess, key_pegs: keys}
             @game_board.push(turn)
         end
         display_board
     end
 
     def generate_code()
-        4.times do
-            @code << CODE_COLORS[rand(6)]
+        if (@player == 'H')
+            4.times do
+                @code << CODE_COLORS[rand(6)]
+            end
+        elsif (@player == 'C')
+            valid = false
+            while (valid == false)
+                puts "Enter your code"
+                code = gets.chomp.split('')
+                valid = check_guess(code)
+            end
+            @code = code
         end
     end
 
@@ -52,7 +72,7 @@ class MastermindGame
             guess_valid = false
         end
         if guess_valid == false
-            puts "Invalid guess. Try again."
+            puts "Invalid code. Try again."
             play_round
         end
         guess_valid
@@ -94,5 +114,7 @@ class MastermindGame
 end
 
 puts "Enter 'h'(uman) to guess or 'c'(omputer) to create a code and have the computer guess:"
-game = MastermindGame.new(gets.chomp)
+player = gets.chomp
+p player
+game = MastermindGame.new(player)
 game.play

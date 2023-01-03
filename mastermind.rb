@@ -13,21 +13,26 @@ class MastermindGame
     def play()
         while @num_guesses < @allowed_guesses
             play_round
+            if win?
+                puts "You got the code! It was #{@code.join}"
+                exit
+            end
             @num_guesses += 1
         end
+        puts "You ran out of guesses!"
     end
 
     def play_round()
         guess_valid = false
-        puts "Enter code: "
+        puts "\nEnter code: "
         guess = gets.chop.upcase.chars
         guess_valid = check_guess(guess)
         if guess_valid
             keys = give_feedback(guess)
-            puts "#{{guess: guess, key_pegs: keys}}"
-            @game_board.push({guess: guess, key_pegs: keys})
+            turn = {guess: guess, key_pegs: keys}
+            @game_board.push(turn)
         end
-        puts @gameboard
+        display_board
     end
 
     def generate_code()
@@ -49,7 +54,8 @@ class MastermindGame
     end
 
     def give_feedback(guess)
-        puts @code
+        system("clear")|| system("cls")
+        puts @code  # remove this when we are sure it works
         key_pegs = []
         code_colors = count_colors(@code)
         # Only add a B or W peg if the instances of a code color are not used up
@@ -69,6 +75,16 @@ class MastermindGame
             totals[color] += 1
             totals
         end
+    end
+
+    def display_board
+        @game_board.each do |row|
+            puts "#{row[:guess].join} | #{row[:key_pegs].join}"
+        end
+    end
+
+    def win?
+        @game_board[-1][:key_pegs] == ['B', 'B', 'B', 'B']
     end
 end
 

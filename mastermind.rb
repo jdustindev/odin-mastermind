@@ -6,6 +6,8 @@ class MastermindGame
         @allowed_guesses = 10
         @num_guesses = 0
         @game_board = []
+        @code = []
+        generate_code
     end
 
     def play()
@@ -19,6 +21,12 @@ class MastermindGame
         puts "Enter code: "
         guess = gets.split('')
         puts guess
+    end
+
+    def generate_code()
+        4.times do
+            @code << CODE_COLORS[rand(6)]
+        end
     end
 end
 

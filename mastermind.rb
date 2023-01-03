@@ -9,6 +9,8 @@ class MastermindGame
         @game_board = []
         @code = []
         generate_code
+
+        @possible_guesses = CODE_COLORS.repeated_permutation(4).to_a
     end
 
     def play()
@@ -34,7 +36,7 @@ class MastermindGame
             guess = gets.chop.upcase.chars
             guess_valid = check_guess(guess)
             if guess_valid
-                keys = give_feedback(guess)
+                keys = give_feedback(guess, @code)
                 turn = {guess: guess, key_pegs: keys}
                 @game_board.push(turn)
             end
@@ -73,17 +75,17 @@ class MastermindGame
         guess_valid
     end
 
-    def give_feedback(guess)
+    def give_feedback(guess, code)
         system("clear")|| system("cls")
-        puts @code  # remove this when we are sure it works
+        puts code  # remove this when we are sure it works
         key_pegs = []
-        code_colors = count_colors(@code)
+        code_colors = count_colors(code)
         # Only add a B or W peg if the instances of a code color are not used up
         # (This prevents adding a white peg when there is already a peg for a color)
         # (That is, without this extra logic, it would add a white peg for every guess of a color even if it is only matched once)
         guess.each_with_index do |item, index|
-            if (@code.include?(item) && code_colors[item] > 0)
-                item == @code[index] ? key_pegs << "B" : key_pegs << "W"
+            if (code.include?(item) && code_colors[item] > 0)
+                item == code[index] ? key_pegs << "B" : key_pegs << "W"
                 code_colors[item] -= 1
             end
         end
@@ -109,14 +111,20 @@ class MastermindGame
 
     def computer_guess
         code_guess = []
+
         if (@game_board.empty?)
             code_guess = ['R', 'R', 'G', 'G']
         else
-            4.times do
-                code_guess << CODE_COLORS[rand(6)]
+            #4.times do
+            #    code_guess << CODE_COLORS[rand(6)]
+            #end
+
+            @possible_guesses = @possible_guesses.reject do |guess|
+                @game_board[-1][:key_pegs] != give_feedback(@game_board[-1][:guess], guess)
             end
+            code_guess = @possible_guesses[0]
         end
-        keys = give_feedback(code_guess)
+        keys = give_feedback(code_guess, @code)
         {guess: code_guess, key_pegs: keys}
     end
 end
